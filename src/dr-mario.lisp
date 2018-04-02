@@ -4,12 +4,14 @@
     (defpackage dr-mario
       (:use :cl)
       (:import-from :dr-mario.graphics
-                    :get-style
-                    :get-foreground
-                    :get-background)
+                    :generate-control-string
+                    :generate-reset-string)
       (:export :run))))
 (in-package :dr-mario)
 
 (defun run ()
-  (format t "~sBold!~c" (get-style :bold) #\newline))
+  (format t "~sControl string~s~c"
+          (generate-control-string :yellow :blue '(:bold :underline))
+          (generate-reset-string)
+          #\newline))
 

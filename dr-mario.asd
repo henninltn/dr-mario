@@ -11,11 +11,12 @@
   :version "0.1.0"
   :author "hennin"
   :license "MIT"
-  :depends-on ()
+  :depends-on (:alexandria
+               :dr-mario-utils)
   :components ((:module "src"
                 :components
                 ((:file "dr-mario" :depends-on ("graphics"))
-                 (:file "graphics"))))
+                 (:file "graphics" :depends-on ("string" "macros")))))
   :description "Puzzle game like Dr.MARIO"
   :long-description
   #.(read-file-string

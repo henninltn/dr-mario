@@ -1,20 +1,16 @@
 (in-package :cl-user)
 (defpackage dr-mario.graphics
   (:use :cl)
-  (:export :get-style
-           :get-foreground
-           :get-background))
+  (:export :generate-control-string
+           :generate-reset-string)
+  (:import-from :dr-mario-utils.string
+                :join)
+  (:import-from :dr-mario-utils.macros
+                :->))
 (in-package :dr-mario.graphics)
 
-(defconstant *styles* (make-hash-table))
-(setf (gethash :bold *styles*) 1)
-(setf (gethash :Italic *styles*) 3)
-(setf (gethash :Underline *styles*) 4)
-(setf (gethash :slow-blink *styles*) 5)
-(setf (gethash :rapid-blink *styles*) 6)
-(setf (gethash :double-underline *styles*) 21)
-
 (defconstant *foreground-colors* (make-hash-table))
+(setf (gethash :default *foreground-colors*) 39)
 (setf (gethash :black *foreground-colors*) 30)
 (setf (gethash :red *foreground-colors*) 31)
 (setf (gethash :green *foreground-colors*) 32)
@@ -33,6 +29,7 @@
 (setf (gethash :bright-white *foreground-colors*) 97)
 
 (defconstant *background-colors* (make-hash-table))
+(setf (gethash :default *foreground-colors*) 49)
 (setf (gethash :black *background-colors*) 40)
 (setf (gethash :red *background-colors*) 41)
 (setf (gethash :green *background-colors*) 42)
@@ -50,19 +47,34 @@
 (setf (gethash :bright-cyan *background-colors*) 106)
 (setf (gethash :bright-white *background-colors*) 107)
 
+(defconstant *styles* (make-hash-table))
+(setf (gethash :bold *styles*) 1)
+(setf (gethash :Italic *styles*) 3)
+(setf (gethash :Underline *styles*) 4)
+(setf (gethash :slow-blink *styles*) 5)
+(setf (gethash :rapid-blink *styles*) 6)
+(setf (gethash :double-underline *styles*) 21)
 
-(defun get-effect (key table)
+(defun get-code (key table)
   (multiple-value-bind (code exists)
       (gethash key table)
     (if exists
-        (format nil "~c[~sm" #\esc code)
+        code
         (error "'~a' doesn't exist in '~a'" key table))))
 
-(defun get-style (style)
-  (get-effect style *styles*))
 
-(defun get-foreground (color)
-  (get-effect color *foreground-colors*))
 
-(defun get-background (color)
-  (get-effect color *background-colors*))
+(defun generate-control-string (foreground background styles)
+  (format nil "~c[~sm"
+          #\esc
+          (-> (cons (get-code foreground
+                              *foreground-colors*)
+                    (cons (get-code background
+                                    *background-colors*)
+                          styles))
+              )
+          (join ";"
+                )))
+
+(defun generate-reset-string ()
+  (format nil "~c[m") #\esc)

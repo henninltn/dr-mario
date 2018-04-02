@@ -11,7 +11,12 @@
                "prove")
   :components ((:module "tests"
                 :components
-                ((:test-file "dr-mario"))))
+                ((:test-file "dr-mario")
+                 (:module "utils"
+                  :components
+                  ((:test-file "list")
+                   (:test-file "string")
+                   (:test-file "macros"))))))
   :description "Test system for dr-mario"
 
   :perform (test-op (op c) (symbol-call :prove-asdf :run-test-system c)))
