@@ -14,7 +14,8 @@
   :depends-on ()
   :components ((:module "src"
                 :components
-                ((:file "dr-mario"))))
+                ((:file "dr-mario" :depends-on ("graphics"))
+                 (:file "graphics"))))
   :description "Puzzle game like Dr.MARIO"
   :long-description
   #.(read-file-string
