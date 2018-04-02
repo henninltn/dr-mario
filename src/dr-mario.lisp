@@ -1,5 +1,8 @@
 (defpackage dr-mario
-  (:use :cl))
+  (:use :cl)
+  (:export :run))
 (in-package :dr-mario)
 
-;; blah blah blah.
+(defun run ()
+  (format t "Hello, world!~c" #\newline))
+
